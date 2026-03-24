@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HomeGuard | VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task</title>
+  <meta name="description" content="HomeGuard is a VLM-based embodied safeguard for identifying contextual risk in household tasks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --surface: rgba(255,255,255,0.78);
+      --surface-strong: #fffaf2;
+      --ink: #1f2937;
+      --muted: #5b6573;
+      --line: rgba(31, 41, 55, 0.12);
+      --accent: #c96b2c;
+      --accent-deep: #9f4b15;
+      --accent-soft: #f3d7bf;
+      --green: #2f7a5f;
+      --green-soft: #d8efe5;
+      --shadow: 0 18px 50px rgba(77, 53, 26, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(201, 107, 44, 0.14), transparent 32%),
+        radial-gradient(circle at top right, rgba(47, 122, 95, 0.10), transparent 25%),
+        linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(18px);
+      background: rgba(246, 241, 232, 0.82);
+      border-bottom: 1px solid rgba(31, 41, 55, 0.08);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 74px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent) 0%, #ef9d58 100%);
+      color: white;
+      box-shadow: var(--shadow);
+      font-family: "Libre Baskerville", serif;
+      font-size: 1rem;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover { color: var(--accent-deep); }
+    .hero {
+      padding: 72px 0 48px;
+    }
+    .hero-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.82), rgba(255,250,242,0.9));
+      border: 1px solid rgba(255,255,255,0.75);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -100px -120px auto;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(47, 122, 95, 0.13), transparent 65%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(47, 122, 95, 0.1);
+      color: var(--green);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3 { line-height: 1.15; margin: 0; }
+    h1 {
+      font-family: "Libre Baskerville", serif;
+      font-size: clamp(2.4rem, 5.3vw, 4.2rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-family: "Libre Baskerville", serif;
+      font-size: clamp(1.75rem, 3vw, 2.45rem);
+      margin-bottom: 16px;
+    }
+    h3 {
+      font-size: 1.18rem;
+      margin-bottom: 10px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 30px;
+      align-items: center;
+    }
+    .lead {
+      font-size: 1.08rem;
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+    .authors {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin: 0 0 10px;
+    }
+    .affiliations {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #e08943 100%);
+      color: white;
+      box-shadow: 0 16px 28px rgba(201, 107, 44, 0.24);
+    }
+    .button.secondary {
+      background: white;
+      border-color: rgba(31,41,55,0.12);
+      color: var(--ink);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(31,41,55,0.08);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+    .stat .value {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--accent-deep);
+    }
+    .stat .label {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .hero-visual {
+      display: grid;
+      gap: 16px;
+    }
+    .hero-visual img,
+    .panel img,
+    .feature-panel img,
+    .gallery-card img,
+    .metric-panel img {
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(31,41,55,0.08);
+      background: white;
+    }
+    section { padding: 28px 0 34px; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .section-kicker {
+      display: inline-block;
+      color: var(--accent-deep);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-copy {
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0;
+    }
+    .panel {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+    .bullet-list {
+      display: grid;
+      gap: 14px;
+      margin: 18px 0 0;
+    }
+    .bullet {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(31,41,55,0.08);
+    }
+    .bullet-index {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      font-weight: 800;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+    .card-tag {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .card p,
+    .feature-panel p,
+    .metric-note,
+    .caption,
+    .footer-note,
+    .mini {
+      color: var(--muted);
+    }
+    .card-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: white;
+      border: 1px solid rgba(31,41,55,0.1);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      align-items: start;
+    }
+    .feature-panel {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .metric-panel {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.76);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .gallery-card {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.78);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+    .gallery-card h3 { margin-bottom: 0; }
+    .code-block {
+      background: #1f2430;
+      color: #f4f1eb;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+      white-space: pre-wrap;
+    }
+    .footer {
+      padding: 36px 0 54px;
+    }
+    .footer-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(31,41,55,0.08);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .caption { margin-top: 10px; font-size: 0.93rem; }
+    .mini { font-size: 0.92rem; }
+    @media (max-width: 1080px) {
+      .hero-grid, .feature-grid, .two-col, .cards, .metric-grid, .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .nav { min-height: 68px; }
+      .nav-links { display: none; }
+      .hero { padding-top: 34px; }
+      .hero-card { padding: 22px; }
+      .hero-grid, .feature-grid, .two-col, .cards, .metric-grid, .gallery-grid, .stats { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .button-row { gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="container nav">
+      <a class="brand" href="#top">
+        <div class="brand-badge">HG</div>
+        <div>
+          <div>HomeGuard</div>
+          <div class="mini">Embodied contextual-risk safeguard</div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#modules">Modules</a>
+        <a href="#results">Results</a>
+        <a href="#cases">Cases</a>
+        <a href="#citation">Citation</a>
+      </div>
+    </div>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">First specialized embodied safeguard for household contextual risk</div>
+              <h1>HomeGuard: VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task</h1>
+              <p class="lead">HomeGuard is a plug-and-play safeguard that helps embodied agents detect implicit hazards hidden in otherwise benign household instructions, ground risk-critical regions, and pass those grounded cues to downstream planners.</p>
+              <p class="authors">Xiaoya Lu, Yijin Zhou, Zeren Chen, Ruocheng Wang, Bingrui Sima, Enshen Zhou, Lu Sheng, Dongrui Liu, Jing Shao</p>
+              <p class="affiliations">Shanghai AI Laboratory, Shanghai Jiao Tong University, Beihang University, Huazhong University of Science and Technology</p>
+              <div class="button-row">
+                <a class="button primary" href="https://arxiv.org/pdf/2603.14367" target="_blank" rel="noreferrer">Paper</a>
+                <a class="button secondary" href="https://github.com/AI45Lab/HomeGuard" target="_blank" rel="noreferrer">Code</a>
+                <a class="button secondary" href="https://huggingface.co/datasets/Ursulalala/HomeSafe" target="_blank" rel="noreferrer">Dataset</a>
+                <a class="button secondary" href="https://huggingface.co/Ursulalala/HomeGuard-8B" target="_blank" rel="noreferrer">Model</a>
+              </div>
+              <div class="stats">
+                <div class="stat">
+                  <div class="value">90.98%</div>
+                  <div class="label">RIR on HomeSafe-Bench</div>
+                </div>
+                <div class="stat">
+                  <div class="value">74.90%</div>
+                  <div class="label">RMR on HomeSafe-Bench</div>
+                </div>
+                <div class="stat">
+                  <div class="value">16.11%</div>
+                  <div class="label">Safe success gain on IS-Bench</div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <img src="assets/teaser.png" alt="HomeGuard teaser figure">
+              <img src="assets/safe_trajectory.png" alt="HomeGuard safe trajectory application">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Overview</div>
+            <h2>Context-guided safety reasoning for cluttered household scenes</h2>
+          </div>
+          <p class="section-copy">Inspired by the structure of the RoboRefer project page, this homepage distills HomeGuard into a compact research narrative: why contextual household risk is hard, how HomeGuard grounds those risks, and how the repository is organized for data, training, evaluation, and application.</p>
+        </div>
+        <div class="two-col">
+          <div class="panel">
+            <h3>Why this problem matters</h3>
+            <div class="bullet-list">
+              <div class="bullet">
+                <div class="bullet-index">1</div>
+                <div><strong>Implicit hazards are easy to miss.</strong> Many household instructions are not malicious by themselves. Risk emerges from object states and spatial relations, such as heating food when a metal container is already inside the microwave.</div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-index">2</div>
+                <div><strong>Pure language safety rules are brittle.</strong> Embodied safety requires seeing what is actually in the scene, deciding which regions matter, and connecting those regions to task semantics.</div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-index">3</div>
+                <div><strong>Grounding should help downstream action.</strong> HomeGuard outputs not only risk judgments, but also visual anchors that can guide planners and low-level execution modules.</div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-panel">
+            <h3>Method ingredients</h3>
+            <p>HomeGuard combines Context-Guided Chain-of-Thought with explicit visual grounding. The pipeline first prioritizes the interaction target and constraint regions, then performs semantic risk judgment, and finally returns structured guidance that downstream systems can consume.</p>
+            <img src="assets/training_framework.png" alt="HomeGuard training framework">
+            <p class="caption">The released repository includes the full lifecycle: HomeSafe data construction, staged training, benchmark evaluation, and planner integration.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="modules">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Repository Modules</div>
+            <h2>Four parts, one release-ready workflow</h2>
+          </div>
+          <p class="section-copy">The public HomeGuard repository is organized around the same four components described in the paper and README: HomeSafe data construction, two-stage training, benchmark evaluation, and downstream safety-aware planning.</p>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <div class="card-tag">Data</div>
+            <div>
+              <h3>HomeSafe construction pipeline</h3>
+              <p>Build paired safe and unsafe household scenes from real-world seed images, verify fidelity and hazard consistency, and annotate object states plus reasoning traces for supervision.</p>
+            </div>
+            <div class="card-links">
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/data" target="_blank" rel="noreferrer">data/</a>
+              <a class="chip" href="https://huggingface.co/datasets/Ursulalala/HomeSafe" target="_blank" rel="noreferrer">HomeSafe dataset</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Training</div>
+            <div>
+              <h3>SFT + GRPO / RFT</h3>
+              <p>Stage one uses LlamaFactory for supervised tuning on structured perception and reasoning targets. Stage two uses Visual-RFT to reinforce grounded safety reasoning under harder embodied settings.</p>
+            </div>
+            <div class="card-links">
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/training" target="_blank" rel="noreferrer">training/</a>
+              <a class="chip" href="https://huggingface.co/Ursulalala/HomeGuard-8B" target="_blank" rel="noreferrer">HomeGuard-8B</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Evaluation</div>
+            <div>
+              <h3>HomeSafe-Bench and public benchmarks</h3>
+              <p>Benchmark contextual risk identification on HomeSafe-Bench and compare generalization on EARBench, MSSBench, PaSBench, and SafeAgentBench-style rendered scenes.</p>
+            </div>
+            <div class="card-links">
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/evaluation" target="_blank" rel="noreferrer">evaluation/</a>
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/blob/main/evaluation/evaluation.py" target="_blank" rel="noreferrer">evaluation.py</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-tag">Application</div>
+            <div>
+              <h3>Safe planning interface</h3>
+              <p>Turn HomeGuard risk detections into planner-side safety constraints, then pass those cues to downstream execution modules such as RoboBrain trajectory generation.</p>
+            </div>
+            <div class="card-links">
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/application" target="_blank" rel="noreferrer">application/</a>
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/blob/main/application/plan_traj.py" target="_blank" rel="noreferrer">planner demo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="feature-grid">
+          <div class="feature-panel">
+            <div class="section-kicker">Data Recipe</div>
+            <h2>Counterfactual household scene synthesis</h2>
+            <p>The HomeSafe pipeline edits real-world seed images into safe and unsafe pairs instead of relying on unconstrained generation from scratch. This preserves realistic layouts while injecting semantically meaningful hazards and corresponding safe alternatives.</p>
+            <img src="assets/data_recipe.png" alt="HomeSafe data recipe">
+            <p class="caption">The released data pipeline follows the paper stages: planning, augmentation, editing, verification, and hierarchical annotation.</p>
+          </div>
+          <div class="feature-panel">
+            <div class="section-kicker">Application</div>
+            <h2>Grounding that transfers to planning</h2>
+            <p>HomeGuard is designed to be architecture-agnostic. The model’s grounded outputs can be consumed by external planners to produce safer action sequences, instead of acting as a pure post-hoc classifier.</p>
+            <img src="assets/planning_case.png" alt="Planning case study">
+            <p class="caption">A case study from the paper showing how grounded safety cues reshape planning decisions in a household scene.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Results</div>
+            <h2>Strong benchmark performance with practical planning gains</h2>
+          </div>
+          <p class="section-copy">HomeGuard delivers strong contextual-risk identification on HomeSafe-Bench, improves generalization to public benchmarks, and provides grounded signals that help downstream planners avoid unsafe execution without becoming overly conservative.</p>
+        </div>
+        <div class="metric-grid">
+          <div class="metric-panel">
+            <img src="assets/experiment1.png" alt="HomeSafe-Bench results">
+            <div>
+              <h3>HomeSafe-Bench</h3>
+              <p class="metric-note">HomeGuard-8B reaches 90.98% RIR and 74.90% RMR, outperforming strong open-source baselines and staying competitive with proprietary systems.</p>
+            </div>
+          </div>
+          <div class="metric-panel">
+            <img src="assets/experiment2.png" alt="Public benchmark results">
+            <div>
+              <h3>Public benchmarks</h3>
+              <p class="metric-note">The model generalizes to EARBench, MSSBench, PaSBench, and SafeAgentBench-style settings, showing that the learned safety grounding extends beyond the in-domain benchmark.</p>
+            </div>
+          </div>
+          <div class="metric-panel">
+            <img src="assets/efficiency.png" alt="Efficiency results">
+            <div>
+              <h3>Efficiency and utility</h3>
+              <p class="metric-note">By focusing attention on risk-critical regions, HomeGuard reduces oversafety and improves safe planning outcomes without requiring a brittle rule-based safety layer.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cases">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Case Studies</div>
+            <h2>Qualitative examples from the paper</h2>
+          </div>
+          <p class="section-copy">The figures below are adapted from the paper assets already stored in the repository. They illustrate how HomeGuard reasons over object states, hazard regions, and downstream decision consequences.</p>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-card">
+            <img src="assets/guard_case.png" alt="Guard case study">
+            <div>
+              <h3>Risk grounding</h3>
+              <p>HomeGuard highlights the specific environmental state or object relation that makes an otherwise benign instruction risky.</p>
+            </div>
+          </div>
+          <div class="gallery-card">
+            <img src="assets/data_case2.png" alt="HomeSafe dataset visualization">
+            <div>
+              <h3>Data examples</h3>
+              <p>HomeSafe pairs safe and unsafe household scenes with aligned metadata, reasoning traces, and grounded supervision targets.</p>
+            </div>
+          </div>
+          <div class="gallery-card">
+            <img src="assets/safe_trajectory.png" alt="Safe trajectory case study">
+            <div>
+              <h3>Safe action guidance</h3>
+              <p>Grounded outputs can be turned into planning constraints and spatial waypoints for execution-time safety support.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <div class="container">
+        <div class="two-col">
+          <div class="panel">
+            <div class="section-kicker">Resources</div>
+            <h2>What you can use today</h2>
+            <div class="bullet-list">
+              <div class="bullet">
+                <div class="bullet-index">A</div>
+                <div><strong>Codebase:</strong> repository organization for data processing, training, evaluation, and application demos.</div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-index">B</div>
+                <div><strong>Dataset:</strong> HomeSafe and HomeSafe-Bench assets released on Hugging Face with viewer-friendly previews.</div>
+              </div>
+              <div class="bullet">
+                <div class="bullet-index">C</div>
+                <div><strong>Model:</strong> released HomeGuard-8B checkpoint for inference and reproduction.</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-kicker">Quick Links</div>
+            <h2>Repository entry points</h2>
+            <div class="card-links">
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/blob/main/README.md" target="_blank" rel="noreferrer">README</a>
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/data" target="_blank" rel="noreferrer">Data</a>
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/training" target="_blank" rel="noreferrer">Training</a>
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/evaluation" target="_blank" rel="noreferrer">Evaluation</a>
+              <a class="chip" href="https://github.com/AI45Lab/HomeGuard/tree/main/application" target="_blank" rel="noreferrer">Application</a>
+              <a class="chip" href="https://huggingface.co/datasets/Ursulalala/HomeSafe" target="_blank" rel="noreferrer">HomeSafe</a>
+              <a class="chip" href="https://huggingface.co/Ursulalala/HomeGuard-8B" target="_blank" rel="noreferrer">HomeGuard-8B</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="citation">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Citation</div>
+            <h2>If you find HomeGuard useful, please cite</h2>
+          </div>
+        </div>
+        <div class="code-block">@article{lu2026homeguard,
+  title={HomeGuard: VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task},
+  author={Lu, Xiaoya and Zhou, Yijin and Chen, Zeren and Wang, Ruocheng and Sima, Bingrui and Zhou, Enshen and Sheng, Lu and Liu, Dongrui and Shao, Jing},
+  journal={arXiv preprint arXiv:2603.14367},
+  year={2026}
+}</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-card">
+        <strong>HomeGuard Project Page</strong>
+        <p class="footer-note">This homepage is organized as a release-oriented project page inspired by the structure and presentation style of the RoboRefer website, while using HomeGuard-specific content, assets, and links.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
