@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HomeGuard | VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="stylesheet" href="./static/css/benchmark_carousel.css">
+    <link rel="stylesheet" href="./static/css/simulator_carousel.css">
+    <link rel="stylesheet" href="./static/css/dataset_carousel.css">
+    <link rel="stylesheet" href="./static/css/demo_video.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script defer src="./static/js/index.js"></script>
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-start" style="flex-grow: 1; justify-content: center">
+                <a class="navbar-item" href="https://github.com/AI45Lab/HomeGuard" target="_blank">
+                    <span class="icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                </a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link"> More Resources </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="https://github.com/AI45Lab/HomeGuard" target="_blank">HomeGuard Repository</a>
+                        <a class="navbar-item" href="https://huggingface.co/datasets/Ursulalala/HomeSafe" target="_blank">HomeSafe Dataset</a>
+                        <a class="navbar-item" href="https://huggingface.co/Ursulalala/HomeGuard-8B" target="_blank">HomeGuard-8B</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title">HomeGuard: VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task</h1>
+
+                        <h3 class="title is-4 conference-authors">
+                            <a target="_blank" href="https://arxiv.org/pdf/2603.14367">arXiv 2026</a>
+                        </h3>
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Xiaoya+Lu">Xiaoya Lu</a><sup>1,2*</sup>,
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Yijin+Zhou">Yijin Zhou</a><sup>1,2*</sup>,
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Zeren+Chen">Zeren Chen</a><sup>3,1</sup>,
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Ruocheng+Wang">Ruocheng Wang</a><sup>2</sup>,
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Bingrui+Sima">Bingrui Sima</a><sup>4</sup>,
+                                <br>
+                                <a target="_blank" href="https://zhoues.github.io/">Enshen Zhou</a><sup>3</sup>,
+                                <a target="_blank" href="https://lucassheng.github.io/">Lu Sheng</a><sup>3</sup>,
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Dongrui+Liu">Dongrui Liu</a><sup>1&#9993;</sup>,
+                                <a target="_blank" href="https://scholar.google.com/scholar?q=Jing+Shao">Jing Shao</a><sup>1&#9993;</sup>
+                            </span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>Shanghai AI Laboratory; </span>
+                            <span class="author-block"><sup>2</sup>Shanghai Jiao Tong University; </span>
+                            <span class="author-block"><sup>3</sup>Beihang University; </span>
+                            <span class="author-block"><sup>4</sup>Huazhong University of Science and Technology</span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>*&#160;</sup>Equal Contribution&#160;&#160;</span>
+                            <span class="author-block"><sup>&#9993;&#160;</sup>Corresponding Authors&#160;&#160;</span>
+                        </div>
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a target="_blank" href="https://arxiv.org/pdf/2603.14367" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                                        <span>Paper</span>
+                                    </a>
+                                </span>
+
+                                <span class="link-block">
+                                    <a target="_blank" href="https://github.com/AI45Lab/HomeGuard" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fab fa-github"></i></span>
+                                        <span>Code</span>
+                                    </a>
+                                    <a target="_blank" href="https://huggingface.co/datasets/Ursulalala/HomeSafe" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fas fa-database"></i></span>
+                                        <span>Dataset</span>
+                                    </a>
+                                    <a target="_blank" href="https://huggingface.co/Ursulalala/HomeGuard-8B" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon"><i class="fas fa-weight-hanging"></i></span>
+                                        <span>Weights</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="is-size-4 publication-authors">
+                            <hr class="soft-line" />
+                            From scene context to grounded safety decisions with <strong>HomeGuard</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero teaser">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <img src="assets/images/teaser.png" alt="HomeGuard teaser" class="teaser-image">
+                <p class="hero-note" style="margin-top: 1rem;">HomeGuard detects implicit hazards hidden in benign household instructions, grounds risk-critical regions, and turns those grounded cues into safer planner behavior.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section hero is-light">
+        <div class="container is-max-desktop has-text-centered">
+            <h2 class="title is-3">Overview</h2>
+            <p class="section-subtitle">HomeGuard focuses on contextual risk in household tasks: the instruction itself may be harmless, but the surrounding scene makes execution unsafe.</p>
+            <div class="overview-box content">
+                <ul>
+                    <li><b>Implicit contextual risk:</b> risk comes from object states and spatial relations, such as heating food when metal utensils are already inside a microwave.</li>
+                    <li><b>Context-Guided Chain-of-Thought:</b> the model separates active perception from semantic risk judgment, helping it focus on the right interaction targets and constraint regions.</li>
+                    <li><b>Visual anchors for action:</b> grounded boxes and safety tips are not just explanations; they can be reused by downstream planners and low-level trajectory modules.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section hero">
+        <div class="container is-max-desktop has-text-centered">
+            <h2 class="title is-3">Repository Overview</h2>
+            <p class="section-subtitle">The HomeGuard release is organized into data construction, staged training, benchmark evaluation, and planner-side application.</p>
+            <div class="columns is-multiline">
+                <div class="column is-6-tablet is-3-desktop">
+                    <div class="module-card content">
+                        <h3>Data</h3>
+                        <p>HomeSafe data construction pipeline, metadata organization, and safe/unsafe household scene pairs.</p>
+                        <div class="tag-row"><span class="resource-tag">data/</span><span class="resource-tag">HomeSafe</span></div>
+                    </div>
+                </div>
+                <div class="column is-6-tablet is-3-desktop">
+                    <div class="module-card content">
+                        <h3>Training</h3>
+                        <p>Stage-wise SFT and GRPO/RFT recipes built on LlamaFactory and Visual-RFT.</p>
+                        <div class="tag-row"><span class="resource-tag">training/</span><span class="resource-tag">LlamaFactory</span><span class="resource-tag">Visual-RFT</span></div>
+                    </div>
+                </div>
+                <div class="column is-6-tablet is-3-desktop">
+                    <div class="module-card content">
+                        <h3>Evaluation</h3>
+                        <p>Unified evaluation on HomeSafe-Bench and four public benchmarks for contextual risk identification.</p>
+                        <div class="tag-row"><span class="resource-tag">evaluation/</span><span class="resource-tag">HomeSafe-Bench</span></div>
+                    </div>
+                </div>
+                <div class="column is-6-tablet is-3-desktop">
+                    <div class="module-card content">
+                        <h3>Application</h3>
+                        <p>Planner integration that converts grounded risk detections into safer task plans and trajectories.</p>
+                        <div class="tag-row"><span class="resource-tag">application/</span><span class="resource-tag">RoboBrain</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <h2 class="title is-3 has-text-centered">HomeSafe Data Generation Pipeline</h2>
+                <p class="description"><b>HomeSafe uses edit-based synthesis to preserve realistic household context while constructing counterfactual safe and unsafe scenario pairs.</b></p>
+                <div class="figure-card content">
+                    <img src="assets/images/data_recipe.png" alt="HomeSafe data recipe" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <h2 class="title is-3 has-text-centered">Training and Planner Integration</h2>
+                <div class="columns is-multiline">
+                    <div class="column is-half">
+                        <div class="figure-card content">
+                            <img src="assets/images/training_framework.png" alt="training framework" />
+                            <p><b>Training framework.</b> HomeGuard combines supervised tuning and reinforcement-style optimization for grounded safety reasoning.</p>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="figure-card content">
+                            <img src="assets/images/planning_case.png" alt="planning case" />
+                            <p><b>Planning case study.</b> Grounded safety tips can be injected into planners to avoid dangerous action sequences.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section hero is-light">
+        <div class="container is-max-desktop has-text-centered">
+            <h2 class="title is-3">Benchmark Performance</h2>
+            <p class="section-subtitle">HomeGuard achieves strong in-domain and cross-benchmark performance while improving practical safe planning utility.</p>
+            <div class="columns is-multiline">
+                <div class="column is-one-third">
+                    <div class="metric-card content">
+                        <img src="assets/images/experiment1.png" alt="experiment 1" />
+                        <p><b>HomeSafe-Bench.</b> HomeGuard-8B reaches 90.98% RIR and 74.90% RMR on our benchmark.</p>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="metric-card content">
+                        <img src="assets/images/experiment2.png" alt="experiment 2" />
+                        <p><b>Public benchmarks.</b> The model generalizes to EARBench, MSSBench, PaSBench, and related safety evaluation settings.</p>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="metric-card content">
+                        <img src="assets/images/efficiency.png" alt="efficiency" />
+                        <p><b>Utility and efficiency.</b> Better hazard grounding reduces oversafety and improves downstream planning success.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <h2 class="title is-3 has-text-centered">Qualitative Case Studies</h2>
+                <p class="description"><b>HomeGuard grounds why a task is risky and how that grounded evidence can guide safer execution.</b></p>
+                <div class="columns is-multiline">
+                    <div class="column is-one-third">
+                        <div class="figure-card content">
+                            <img src="assets/images/guard_case.png" alt="guard case" />
+                            <p><b>Risk grounding.</b> The model localizes the exact contextual trigger behind a hazardous decision.</p>
+                        </div>
+                    </div>
+                    <div class="column is-one-third">
+                        <div class="figure-card content">
+                            <img src="assets/images/data_case2.png" alt="data case" />
+                            <p><b>HomeSafe examples.</b> Safe and unsafe samples are aligned with structured metadata and reasoning supervision.</p>
+                        </div>
+                    </div>
+                    <div class="column is-one-third">
+                        <div class="figure-card content">
+                            <img src="assets/images/safe_trajectory.png" alt="safe trajectory" />
+                            <p><b>Planner support.</b> Grounded safety outputs are transformed into safer action plans and trajectories.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+            <h2 class="title">BibTeX</h2>
+            <pre><code>@article{lu2026homeguard,
+  title={HomeGuard: VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task},
+  author={Lu, Xiaoya and Zhou, Yijin and Chen, Zeren and Wang, Ruocheng and Sima, Bingrui and Zhou, Enshen and Sheng, Lu and Liu, Dongrui and Shao, Jing},
+  journal={arXiv preprint arXiv:2603.14367},
+  year={2026}
+}</code></pre>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content">
+                        <p>
+                            This page reuses the RoboRefer project-page style and local static assets structure, while replacing the content, images, and links with the HomeGuard release.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
