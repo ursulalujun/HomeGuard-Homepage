@@ -21,6 +21,8 @@
     <script src="./static/js/bulma-carousel.min.js"></script>
     <script src="./static/js/bulma-slider.min.js"></script>
     <script defer src="./static/js/index.js"></script>
+    <script defer src="./static/js/risk_category_carousel.js"></script>
+    <script defer src="./static/js/benchmark_full_carousel.js"></script>
 </head>
 <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -59,9 +61,6 @@
                     <div class="column has-text-centered">
                         <h1 class="title is-1 publication-title">HomeGuard: VLM-based Embodied Safeguard for Identifying Contextual Risk in Household Task</h1>
 
-                        <h3 class="title is-4 conference-authors">
-                            <a target="_blank" href="https://arxiv.org/pdf/2603.14367">arXiv 2026</a>
-                        </h3>
                         <div class="is-size-5 publication-authors">
                             <span class="author-block">
                                 <a target="_blank" href="https://scholar.google.com/scholar?q=Xiaoya+Lu">Xiaoya Lu</a><sup>1,2*</sup>,
@@ -148,39 +147,90 @@
         </div>
     </section>
 
-    <section class="section hero">
-        <div class="container is-max-desktop has-text-centered">
-            <h2 class="title is-3">Repository Overview</h2>
-            <p class="section-subtitle">The HomeGuard release is organized into data construction, staged training, benchmark evaluation, and planner-side application.</p>
-            <div class="columns is-multiline">
-                <div class="column is-6-tablet is-3-desktop">
-                    <div class="module-card content">
-                        <h3>Data</h3>
-                        <p>HomeSafe data construction pipeline, metadata organization, and safe/unsafe household scene pairs.</p>
-                        <div class="tag-row"><span class="resource-tag">data/</span><span class="resource-tag">HomeSafe</span></div>
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <h2 class="title is-3 has-text-centered">HomeSafe Dataset: 10K Contextual-Risk Scenarios and 5K Safe Pairwise Scenarios</h2>
+                <p class="description"><b>HomeSafe organizes household contextual hazards into fine-grained risk categories, paired with matched safe counterparts for grounded embodied safety learning.</b></p>
+                <div class="risk-carousel-shell">
+                    <button class="risk-carousel-prev" id="riskPrevBtn"></button>
+                    <button class="risk-carousel-next" id="riskNextBtn"></button>
+                    <div class="risk-carousel-container">
+                        <div class="risk-carousel-track" id="riskCarouselTrack">
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_1.png" alt="Fire risk category" />
+                                </div>
+                            </div>
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_2.png" alt="Electric shock risk category" />
+                                </div>
+                            </div>
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_3.png" alt="Slip and fall risk category" />
+                                </div>
+                            </div>
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_4.png" alt="Collision risk category" />
+                                </div>
+                            </div>
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_5.png" alt="Material safety risk category" />
+                                </div>
+                            </div>
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_6.png" alt="Cutting risk category" />
+                                </div>
+                            </div>
+                            <div class="risk-carousel-slide">
+                                <div class="risk-carousel-card content">
+                                    <img src="assets/images/risk_categories/risk_category_7.png" alt="Poisoning risk category" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="risk-carousel-dots">
+                        <span class="dot active" data-slide="0"></span>
+                        <span class="dot" data-slide="1"></span>
+                        <span class="dot" data-slide="2"></span>
+                        <span class="dot" data-slide="3"></span>
+                        <span class="dot" data-slide="4"></span>
+                        <span class="dot" data-slide="5"></span>
+                        <span class="dot" data-slide="6"></span>
                     </div>
                 </div>
-                <div class="column is-6-tablet is-3-desktop">
-                    <div class="module-card content">
-                        <h3>Training</h3>
-                        <p>Stage-wise SFT and GRPO/RFT recipes built on LlamaFactory and Visual-RFT.</p>
-                        <div class="tag-row"><span class="resource-tag">training/</span><span class="resource-tag">LlamaFactory</span><span class="resource-tag">Visual-RFT</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <h2 class="title is-3 has-text-centered">HomeGuard: The First Guard Model Purpose-Built for Embodied Safety</h2>
+                <div class="paper-figure-stack">
+                    <div class="paper-figure-block">
+                        <img src="assets/images/planning_case.png" alt="HomeGuard planning case" class="paper-figure-image" />
+                        <p class="description"><b>HomeGuard-grounded planning.</b> The plan is generated by <b>Qwen3-VL-8B-Thinking</b> (planner), the execution trajectory is produced by <b>RoboBrain2.5-8B</b> (controller), and the <code>safety_tip</code> is provided by <b>HomeGuard-8B</b> (safeguard).</p>
+                    </div>
+                    <div class="paper-figure-block">
+                        <img src="assets/images/safe_trajectory.png" alt="HomeGuard safe trajectory case" class="paper-figure-image" />
+                        <p class="description"><b>Trajectory-level intervention.</b> HomeGuard produces reusable grounded cues that guide the controller toward a safer execution path under the same instruction.</p>
                     </div>
                 </div>
-                <div class="column is-6-tablet is-3-desktop">
-                    <div class="module-card content">
-                        <h3>Evaluation</h3>
-                        <p>Unified evaluation on HomeSafe-Bench and four public benchmarks for contextual risk identification.</p>
-                        <div class="tag-row"><span class="resource-tag">evaluation/</span><span class="resource-tag">HomeSafe-Bench</span></div>
-                    </div>
-                </div>
-                <div class="column is-6-tablet is-3-desktop">
-                    <div class="module-card content">
-                        <h3>Application</h3>
-                        <p>Planner integration that converts grounded risk detections into safer task plans and trajectories.</p>
-                        <div class="tag-row"><span class="resource-tag">application/</span><span class="resource-tag">RoboBrain</span></div>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">Abstract</h2>
+            <div class="abstract-block content">
+                <p>Vision-Language Models (VLMs) empower embodied agents to execute complex instructions, yet they remain vulnerable to contextual safety risks where benign commands become hazardous due to subtle environmental states. Existing safeguards often prove inadequate. Rule-based methods lack scalability in object-dense scenes, whereas model-based approaches relying on prompt engineering suffer from unfocused perception, resulting in missed risks or hallucinations. To address this, we propose an architecture-agnostic safeguard featuring Context-Guided Chain-of-Thought (CG-CoT). This mechanism decomposes risk assessment into active perception that sequentially anchors attention to interaction targets and relevant spatial neighborhoods, followed by semantic judgment based on this visual evidence. We support this approach with a curated grounding dataset and a two-stage training strategy utilizing Reinforcement Fine-Tuning (RFT) with process rewards to enforce precise intermediate grounding. Experiments demonstrate that our model HomeGuard significantly enhances safety, improving risk match rates by over 30% compared to base models while reducing oversafety. Beyond hazard detection, the generated visual anchors serve as actionable spatial constraints for downstream planners, facilitating explicit collision avoidance and safety trajectory generation.</p>
             </div>
         </div>
     </section>
@@ -190,9 +240,7 @@
             <div class="container is-max-desktop">
                 <h2 class="title is-3 has-text-centered">HomeSafe Data Generation Pipeline</h2>
                 <p class="description"><b>HomeSafe uses edit-based synthesis to preserve realistic household context while constructing counterfactual safe and unsafe scenario pairs.</b></p>
-                <div class="figure-card content">
-                    <img src="assets/images/data_recipe.png" alt="HomeSafe data recipe" />
-                </div>
+                <img src="assets/images/data_recipe.png" alt="HomeSafe data recipe" class="paper-figure-image" />
             </div>
         </div>
     </section>
@@ -200,46 +248,11 @@
     <section class="hero is-small">
         <div class="hero-body">
             <div class="container is-max-desktop">
-                <h2 class="title is-3 has-text-centered">Training and Planner Integration</h2>
-                <div class="columns is-multiline">
-                    <div class="column is-half">
-                        <div class="figure-card content">
-                            <img src="assets/images/training_framework.png" alt="training framework" />
-                            <p><b>Training framework.</b> HomeGuard combines supervised tuning and reinforcement-style optimization for grounded safety reasoning.</p>
-                        </div>
-                    </div>
-                    <div class="column is-half">
-                        <div class="figure-card content">
-                            <img src="assets/images/planning_case.png" alt="planning case" />
-                            <p><b>Planning case study.</b> Grounded safety tips can be injected into planners to avoid dangerous action sequences.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section hero is-light">
-        <div class="container is-max-desktop has-text-centered">
-            <h2 class="title is-3">Benchmark Performance</h2>
-            <p class="section-subtitle">HomeGuard achieves strong in-domain and cross-benchmark performance while improving practical safe planning utility.</p>
-            <div class="columns is-multiline">
-                <div class="column is-one-third">
-                    <div class="metric-card content">
-                        <img src="assets/images/experiment1.png" alt="experiment 1" />
-                        <p><b>HomeSafe-Bench.</b> HomeGuard-8B reaches 90.98% RIR and 74.90% RMR on our benchmark.</p>
-                    </div>
-                </div>
-                <div class="column is-one-third">
-                    <div class="metric-card content">
-                        <img src="assets/images/experiment2.png" alt="experiment 2" />
-                        <p><b>Public benchmarks.</b> The model generalizes to EARBench, MSSBench, PaSBench, and related safety evaluation settings.</p>
-                    </div>
-                </div>
-                <div class="column is-one-third">
-                    <div class="metric-card content">
-                        <img src="assets/images/efficiency.png" alt="efficiency" />
-                        <p><b>Utility and efficiency.</b> Better hazard grounding reduces oversafety and improves downstream planning success.</p>
+                <h2 class="title is-3 has-text-centered">Two-Stage Training</h2>
+                <div class="paper-figure-stack">
+                    <div class="paper-figure-block">
+                        <img src="assets/images/training_framework.png" alt="HomeGuard training framework" class="paper-figure-image" />
+                        <p class="description"><b>Two-stage optimization.</b> HomeGuard first learns grounded hazard understanding through supervised fine-tuning, then sharpens intermediate perception and semantic judgment with reinforcement fine-tuning guided by process rewards.</p>
                     </div>
                 </div>
             </div>
@@ -249,26 +262,37 @@
     <section class="hero is-small">
         <div class="hero-body">
             <div class="container is-max-desktop">
-                <h2 class="title is-3 has-text-centered">Qualitative Case Studies</h2>
-                <p class="description"><b>HomeGuard grounds why a task is risky and how that grounded evidence can guide safer execution.</b></p>
-                <div class="columns is-multiline">
-                    <div class="column is-one-third">
-                        <div class="figure-card content">
-                            <img src="assets/images/guard_case.png" alt="guard case" />
-                            <p><b>Risk grounding.</b> The model localizes the exact contextual trigger behind a hazardous decision.</p>
+                <h2 class="title is-3 has-text-centered">Benchmark Performance</h2>
+                <p class="description"><b>HomeGuard improves both in-domain risk grounding and cross-benchmark generalization while reducing oversafety in downstream embodied decision-making.</b></p>
+                <div class="benchmark-full-carousel-shell">
+                    <button class="benchmark-full-carousel-prev" id="benchmarkPrevBtn"></button>
+                    <button class="benchmark-full-carousel-next" id="benchmarkNextBtn"></button>
+                    <div class="benchmark-full-carousel-container">
+                        <div class="benchmark-full-carousel-track" id="benchmarkCarouselTrack">
+                            <div class="benchmark-full-carousel-slide">
+                                <div class="benchmark-full-carousel-card content">
+                                    <img src="assets/images/experiment1.png" alt="HomeSafe-Bench results" />
+                                    <p class="benchmark-full-carousel-caption"><b>HomeSafe-Bench.</b> HomeGuard delivers strong risk identification and risk matching on our curated contextual household benchmark.</p>
+                                </div>
+                            </div>
+                            <div class="benchmark-full-carousel-slide">
+                                <div class="benchmark-full-carousel-card content">
+                                    <img src="assets/images/experiment2.png" alt="Public benchmark results" />
+                                    <p class="benchmark-full-carousel-caption"><b>Public benchmarks.</b> The model generalizes to EARBench, MSSBench, PaSBench, and related safety evaluation settings.</p>
+                                </div>
+                            </div>
+                            <div class="benchmark-full-carousel-slide">
+                                <div class="benchmark-full-carousel-card content">
+                                    <img src="assets/images/efficiency.png" alt="Efficiency and utility results" />
+                                    <p class="benchmark-full-carousel-caption"><b>Utility and efficiency.</b> Better contextual grounding translates into safer planning behavior with less oversafety.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="column is-one-third">
-                        <div class="figure-card content">
-                            <img src="assets/images/data_case2.png" alt="data case" />
-                            <p><b>HomeSafe examples.</b> Safe and unsafe samples are aligned with structured metadata and reasoning supervision.</p>
-                        </div>
-                    </div>
-                    <div class="column is-one-third">
-                        <div class="figure-card content">
-                            <img src="assets/images/safe_trajectory.png" alt="safe trajectory" />
-                            <p><b>Planner support.</b> Grounded safety outputs are transformed into safer action plans and trajectories.</p>
-                        </div>
+                    <div class="benchmark-full-carousel-dots">
+                        <span class="dot active" data-benchmark-slide="0"></span>
+                        <span class="dot" data-benchmark-slide="1"></span>
+                        <span class="dot" data-benchmark-slide="2"></span>
                     </div>
                 </div>
             </div>
